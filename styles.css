@@ -29,6 +29,13 @@ body {
   height: calc(33.333% - 10px);
   margin: 5px;
   position: relative;
+  transform: scale(1);
+}
+
+/* Click Effect with transform */
+.card:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
 }
 
 .front-face,
