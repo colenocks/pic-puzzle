@@ -3,6 +3,9 @@
 const getAll = (selector) => document.querySelectorAll(selector);
 const get = (selector) => document.querySelector(selector);
 
+let flipCount = 0;
+let matchedCount = 0;
+const allMatched = 6;
 let isFlipped = false;
 let boardLocked = false;
 let firstCard, secondCard;
@@ -21,12 +24,13 @@ frontFace.forEach((face) => {
   };
   pictures.push(card);
 });
-
 shuffle(pictures);
 
 function flipCard() {
   if (boardLocked) return;
   if (this === firstCard) return;
+
+  flipCount++;
 
   this.classList.add("flip");
 
@@ -59,10 +63,15 @@ function unFlip() {
 
 function disableFlip() {
   //Matched
+  matchedCount++;
   firstCard.removeEventListener("click", flipCard);
   secondCard.removeEventListener("click", flipCard);
 
   resetClickAfterMatch();
+
+  if (matchedCount === allMatched) {
+    displayInfo("You have matched all Cards. Total Attempts: " + flipCount);
+  }
 }
 
 function resetClickAfterMatch() {
@@ -89,6 +98,46 @@ function shuffle(array) {
   }
   setCardAttributes(array);
   return array;
+}
+
+function displayInfo(msg) {
+  //Alert Display
+  let paragraph = document.createElement("p");
+  paragraph.classList.add("p-info");
+  paragraph.append(document.createTextNode(msg));
+
+  // Alert Close button
+  let closeButton = document.createElement("button");
+  closeButton.classList.add("close-button");
+  closeButton.append(document.createTextNode("X"));
+  paragraph.append(closeButton);
+
+  if (
+    document.querySelector(".modal") &&
+    document.querySelector(".alert-box")
+  ) {
+    let modal = document.querySelector(".modal");
+    let alertBox = document.querySelector(".alert-box");
+    alertBox.appendChild(paragraph);
+    modal.appendChild(alertBox);
+  } else {
+    // background
+    let modal = document.createElement("div");
+    modal.classList.add("modal");
+    let alertBox = document.createElement("div");
+    alertBox.classList.add("alert-box");
+    alertBox.appendChild(paragraph);
+    modal.appendChild(alertBox);
+    document.body.appendChild(modal);
+  }
+  closeButton.onclick = function () {
+    let modal = document.querySelector(".modal");
+    let alertBox = document.querySelector(".alert-box");
+    alertBox.removeChild(paragraph);
+    if (document.querySelectorAll(".p-info").length == 0) {
+      document.body.removeChild(modal);
+    }
+  };
 }
 
 cards.forEach((card) => card.addEventListener("click", flipCard));
