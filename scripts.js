@@ -8,9 +8,25 @@ let boardLocked = false;
 let firstCard, secondCard;
 
 let cards = getAll(".card");
+let frontFace = getAll(".front-face");
 
-let flipCard = function () {
+let pictures = [];
+
+//get card images and store in an array
+frontFace.forEach((face) => {
+  let card = {
+    src: face.getAttribute("src"),
+    data: face.parentNode.getAttribute("data-panel"),
+    alt: face.getAttribute("alt"),
+  };
+  pictures.push(card);
+});
+
+shuffle(pictures);
+
+function flipCard() {
   if (boardLocked) return;
+  if (this === firstCard) return;
 
   this.classList.add("flip");
 
@@ -24,27 +40,55 @@ let flipCard = function () {
   isFlipped = false;
   secondCard = this;
   checkMatch();
-};
+}
 
-const checkMatch = function () {
+function checkMatch() {
   firstCard.dataset.panel === secondCard.dataset.panel
     ? disableFlip()
     : unFlip();
-};
+}
 
-const unFlip = function () {
+function unFlip() {
   boardLocked = true; //lock the board
   setTimeout(function () {
     firstCard.classList.remove("flip");
     secondCard.classList.remove("flip");
     boardLocked = false; //unlock after flip
   }, 1500);
-};
+}
 
-const disableFlip = function () {
+function disableFlip() {
   //Matched
   firstCard.removeEventListener("click", flipCard);
   secondCard.removeEventListener("click", flipCard);
-};
+
+  resetClickAfterMatch();
+}
+
+function resetClickAfterMatch() {
+  //reset board after matching
+  [isFlipped, boardLocked] = [false, false];
+  [firstCard, secondCard] = [null, null];
+}
+
+//set the attributes of the cards
+function setCardAttributes(array) {
+  frontFace.forEach((card, index) => {
+    card.setAttribute("src", array[index].src);
+    card.setAttribute("alt", array[index].alt);
+    card.parentNode.setAttribute("data-panel", array[index].data);
+  });
+}
+
+//shuffle the array (random)
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+    // swap elements array[i] and array[j]
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  setCardAttributes(array);
+  return array;
+}
 
 cards.forEach((card) => card.addEventListener("click", flipCard));
