@@ -1,4 +1,4 @@
-# A MEMORY GAME
+# PICTURE PUZZLE
 
 ### with Javascript
 
