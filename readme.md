@@ -2,7 +2,7 @@
 
 ### with Javascript
 
-This simple javascript based game entails clicking on the back faces of the cards wih images randomly ordered. A User clicks and flips the cards to find a match, the aim is to perform the lowest possible number of flips to get all cards turned/matched.
+This simple javascript based game entails clicking on the back faces of the cards with images randomly ordered. A User clicks and flips the cards to find a match, the aim is to perform the lowest possible number of flips to get all cards turned/matched.
 
 ## Cards Shuffle Functionality
 
